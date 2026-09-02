@@ -10,21 +10,27 @@ permissions:
 
 jobs:
   release:
-    name: Build plugin zip & create GitHub Release
+    name: Build, validate & create GitHub Release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-go@v5
         with:
-          go-version: "1.25"
+          go-version: "1.26"
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
-      - name: Install frontend deps & build
+      - name: Go build / vet / test
+        run: |
+          go build ./...
+          go vet ./...
+          go test ./pkg/
+
+      - name: Frontend build (webpack -> dist/module.js + .map)
         run: |
           npm ci
           npm run build
@@ -37,17 +43,20 @@ jobs:
           VERSION="${GITHUB_REF_NAME#v}"
           PKG=panarm-duckdb-datasource
           mkdir -p /tmp/rel/$PKG
-          cp src/plugin.json LICENSE README.md /tmp/rel/$PKG/
+          cp src/plugin.json LICENSE README.md CHANGELOG.md /tmp/rel/$PKG/
           cp -r img /tmp/rel/$PKG/
-          cp dist/module.js /tmp/rel/$PKG/module.js
+          cp dist/module.js dist/module.js.map /tmp/rel/$PKG/
           cp /tmp/gpx_duckdb_quack /tmp/rel/$PKG/gpx_duckdb_quack
           chmod +x /tmp/rel/$PKG/gpx_duckdb_quack
           cd /tmp/rel && zip -r /tmp/$PKG-$VERSION.zip $PKG
-          # 生成 SHA1 校验文件（grafana.com 签名表单可直接用 URL 引用）
           (cd /tmp && sha1sum $PKG-$VERSION.zip > $PKG-$VERSION.zip.sha1)
           echo "ZIP=/tmp/$PKG-$VERSION.zip" >> "$GITHUB_ENV"
           echo "SHA1FILE=/tmp/$PKG-$VERSION.zip.sha1" >> "$GITHUB_ENV"
-          ls -la /tmp/$PKG-$VERSION.zip* | head
+          ls -la /tmp/$PKG-$VERSION.zip*
+
+      - name: Run grafana plugin-validator
+        continue-on-error: true   # unsigned/screenshots are expected warnings; do not block release
+        run: npx --yes @grafana/plugin-validator "${{ env.ZIP }}" || true
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
