@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "datasource",
+  "name": "DuckDB Quack",
+  "id": "panarm-duckdb-datasource",
+  "metrics": true,
+  "backend": true,
+  "executable": "gpx_duckdb_datasource",
+  "info": {
+    "description": "Grafana datasource for DuckDB over the Quack remote protocol (pure Go backend, read-only SQL).",
+    "author": {
+      "name": "Panarm"
+    },
+    "keywords": ["duckdb", "quack", "datasource"],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaDependency": ">=12.3.0",
+    "plugins": []
+  }
+}
