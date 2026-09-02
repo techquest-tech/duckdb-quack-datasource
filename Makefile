@@ -4,8 +4,8 @@ VERSION ?= 0.1.0
 
 # 构建后端（darwin 测试 + linux 部署产物）
 build-backend:
-	CGO_ENABLED=0 go build -ldflags "-s -w" -o dist/$(EXEC)-darwin ./cmd
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o dist/$(EXEC)-linux ./cmd
+	GOWORK=off CGO_ENABLED=0 go build -ldflags "-s -w" -o dist/$(EXEC)-darwin ./cmd
+	GOWORK=off CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o dist/$(EXEC)-linux ./cmd
 
 # 构建前端（esbuild → dist/module.js）
 build-frontend:
