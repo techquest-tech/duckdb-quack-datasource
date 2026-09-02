@@ -43,13 +43,18 @@ jobs:
           cp /tmp/gpx_duckdb_quack /tmp/rel/$PKG/gpx_duckdb_quack
           chmod +x /tmp/rel/$PKG/gpx_duckdb_quack
           cd /tmp/rel && zip -r /tmp/$PKG-$VERSION.zip $PKG
+          # 生成 SHA1 校验文件（grafana.com 签名表单可直接用 URL 引用）
+          (cd /tmp && sha1sum $PKG-$VERSION.zip > $PKG-$VERSION.zip.sha1)
           echo "ZIP=/tmp/$PKG-$VERSION.zip" >> "$GITHUB_ENV"
-          ls -la /tmp/$PKG-$VERSION.zip
+          echo "SHA1FILE=/tmp/$PKG-$VERSION.zip.sha1" >> "$GITHUB_ENV"
+          ls -la /tmp/$PKG-$VERSION.zip* | head
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{ env.ZIP }}
+          files: |
+            ${{ env.ZIP }}
+            ${{ env.SHA1FILE }}
           generate_release_notes: true
           body: |
             Grafana backend datasource for DuckDB via the Quack remote protocol.
