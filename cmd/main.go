@@ -12,7 +12,7 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend/datasource"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 
-	"summationsolutions.com/duckdb-quack-datasource/pkg"
+	"github.com/techquest-tech/duckdb-quack-datasource/pkg"
 )
 
 func main() {

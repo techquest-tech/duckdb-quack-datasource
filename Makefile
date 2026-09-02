@@ -18,6 +18,7 @@ package: build-backend build-frontend
 	cp LICENSE README.md dist/package/$(PLUGIN_ID)/
 	cp -r img dist/package/$(PLUGIN_ID)/
 	cp dist/module.js dist/package/$(PLUGIN_ID)/module.js
+	cp dist/module.js.map dist/package/$(PLUGIN_ID)/module.js.map
 	cp dist/$(EXEC)-linux dist/package/$(PLUGIN_ID)/$(EXEC)
 	chmod +x dist/package/$(PLUGIN_ID)/$(EXEC)
 	cd dist/package && zip -r ../$(PLUGIN_ID)-$(VERSION).zip $(PLUGIN_ID)/

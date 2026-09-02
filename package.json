@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "esbuild src/module.ts --bundle --outfile=dist/module.js --format=esm --sourcemap --external:react --external:react-dom --external:@grafana/*",
+    "build": "webpack --config webpack.config.js",
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
@@ -15,6 +15,11 @@
   },
   "devDependencies": {
     "esbuild": "^0.25.0",
-    "typescript": "^5.6.0"
+    "typescript": "^5.6.0",
+    "webpack": "^5.90.0",
+    "webpack-cli": "^5.1.4",
+    "ts-loader": "^9.5.1",
+    "css-loader": "^7.1.0",
+    "style-loader": "^4.0.0"
   }
 }

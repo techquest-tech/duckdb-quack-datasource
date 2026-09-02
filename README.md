@@ -87,4 +87,4 @@ QUACK_LIVE_ENDPOINT=127.0.0.1:9495 QUACK_LIVE_TOKEN=<t> go test ./pkg/ -run Test
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT — see [LICENSE](https://github.com/techquest-tech/duckdb-quack-datasource/blob/v0.1.3/LICENSE).
