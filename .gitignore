@@ -1,0 +1,16 @@
+# --- build artifacts ---
+dist/
+node_modules/
+*.zip
+*.tgz
+
+# --- os ---
+.DS_Store
+
+# --- editors ---
+.idea/
+.vscode/
+*.swp
+
+# --- logs ---
+*.log

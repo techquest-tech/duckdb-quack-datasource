@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "datasource",
+  "name": "DuckDB Quack",
+  "id": "esquel-duckdb-datasource",
+  "info": {
+    "description": "Grafana datasource for DuckDB via the Quack remote protocol (pure Go backend, no HTTP gateway).",
+    "version": "0.1.0",
+    "updated": "2026-09-02",
+    "author": {
+      "name": "Summation Solutions"
+    },
+    "keywords": [
+      "duckdb",
+      "quack",
+      "datasource"
+    ],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    }
+  },
+  "backend": true,
+  "executable": "gpx_duckdb_quack",
+  "dependencies": {
+    "grafanaDependency": ">=12.0.0",
+    "grafanaVersion": "12.x.x",
+    "plugins": []
+  },
+  "metrics": true,
+  "annotations": true
+}
