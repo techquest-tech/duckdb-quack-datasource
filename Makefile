@@ -14,7 +14,7 @@ build-frontend:
 # 组装可分发插件包（Grafana 规范：module.js 在插件根目录 + LICENSE/README）
 package: build-backend build-frontend
 	rm -rf dist/package/$(PLUGIN_ID) && mkdir -p dist/package/$(PLUGIN_ID)
-	cp plugin.json dist/package/$(PLUGIN_ID)/
+	cp src/plugin.json dist/package/$(PLUGIN_ID)/
 	cp LICENSE README.md dist/package/$(PLUGIN_ID)/
 	cp -r img dist/package/$(PLUGIN_ID)/
 	cp dist/module.js dist/package/$(PLUGIN_ID)/module.js

@@ -37,7 +37,7 @@ jobs:
           VERSION="${GITHUB_REF_NAME#v}"
           PKG=panarm-duckdb-datasource
           mkdir -p /tmp/rel/$PKG
-          cp plugin.json LICENSE README.md /tmp/rel/$PKG/
+          cp src/plugin.json LICENSE README.md /tmp/rel/$PKG/
           cp -r img /tmp/rel/$PKG/
           cp dist/module.js /tmp/rel/$PKG/module.js
           cp /tmp/gpx_duckdb_quack /tmp/rel/$PKG/gpx_duckdb_quack
