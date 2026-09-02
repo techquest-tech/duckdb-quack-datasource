@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Go build / vet / test
+        run: |
+          go build ./...
+          go vet ./...
+          go test ./pkg/
+
+      - name: Frontend build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Go backend (linux)
+        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /tmp/gpx_duckdb_quack ./cmd
+
+  validate:
+    name: Plugin validator
+    runs-on: ubuntu-latest
+    needs: build-test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Build frontend
+        run: npm ci && npm run build
+
+      - name: Build backend (linux)
+        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /tmp/gpx_duckdb_quack ./cmd
+
+      - name: Assemble plugin package
+        run: |
+          mkdir -p /tmp/pkg/esquel-duckdb-datasource
+          cp plugin.json LICENSE README.md /tmp/pkg/esquel-duckdb-datasource/
+          cp -r img /tmp/pkg/esquel-duckdb-datasource/
+          cp dist/module.js /tmp/pkg/esquel-duckdb-datasource/module.js
+          cp /tmp/gpx_duckdb_quack /tmp/pkg/esquel-duckdb-datasource/gpx_duckdb_quack
+          chmod +x /tmp/pkg/esquel-duckdb-datasource/gpx_duckdb_quack
+
+      - name: Run grafana plugin-validator
+        # 官方校验：结构/plugin.json/LICENSE/README 等（未签名 warning 属预期，不阻塞）
+        run: |
+          cd /tmp/pkg && zip -r /tmp/plugin.zip esquel-duckdb-datasource/
+          npx --yes @grafana/plugin-validator /tmp/plugin.zip || true

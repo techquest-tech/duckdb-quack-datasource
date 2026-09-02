@@ -1,0 +1,61 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build plugin zip & create GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install frontend deps & build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build backend (linux amd64)
+        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o /tmp/gpx_duckdb_quack ./cmd
+
+      - name: Assemble plugin package
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          PKG=esquel-duckdb-datasource
+          mkdir -p /tmp/rel/$PKG
+          cp plugin.json LICENSE README.md /tmp/rel/$PKG/
+          cp -r img /tmp/rel/$PKG/
+          cp dist/module.js /tmp/rel/$PKG/module.js
+          cp /tmp/gpx_duckdb_quack /tmp/rel/$PKG/gpx_duckdb_quack
+          chmod +x /tmp/rel/$PKG/gpx_duckdb_quack
+          cd /tmp/rel && zip -r /tmp/$PKG-$VERSION.zip $PKG
+          echo "ZIP=/tmp/$PKG-$VERSION.zip" >> "$GITHUB_ENV"
+          ls -la /tmp/$PKG-$VERSION.zip
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.ZIP }}
+          generate_release_notes: true
+          body: |
+            Grafana backend datasource for DuckDB via the Quack remote protocol.
+
+            ### Install
+            ```bash
+            grafana cli plugins install esquel-duckdb-datasource
+            ```
+            (requires the plugin to be signed; see grafana.com plugin signing service)

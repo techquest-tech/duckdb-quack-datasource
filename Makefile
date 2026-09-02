@@ -1,23 +1,29 @@
-PLUGIN_ID ?= esquel-duckdb-quack-datasource
+PLUGIN_ID ?= esquel-duckdb-datasource
 EXEC ?= gpx_duckdb_quack
 VERSION ?= 0.1.0
 
 # 构建后端（darwin 测试 + linux 部署产物）
 build-backend:
-	CGO_ENABLED=0 go build -ldflags "-s -w" -o dist/$(EXEC)-darwin .
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o dist/$(EXEC)-linux .
+	CGO_ENABLED=0 go build -ldflags "-s -w" -o dist/$(EXEC)-darwin ./cmd
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o dist/$(EXEC)-linux ./cmd
 
 # 构建前端（esbuild → dist/module.js）
 build-frontend:
 	npm run build
 
-# 组装完整插件目录（Grafana 可加载的结构）
-dist: build-backend build-frontend
-	@echo "==> 插件产物 dist/ 结构："
-	@ls -la dist/
-	@echo "==> 部署到 Grafana 前需把 dist 下文件放到 /var/lib/grafana/plugins/$(PLUGIN_ID)/ 并配置 allow_loading_unsigned_plugins"
+# 组装可分发插件包（Grafana 规范：module.js 在插件根目录 + LICENSE/README）
+package: build-backend build-frontend
+	rm -rf dist/package/$(PLUGIN_ID) && mkdir -p dist/package/$(PLUGIN_ID)
+	cp plugin.json dist/package/$(PLUGIN_ID)/
+	cp LICENSE README.md dist/package/$(PLUGIN_ID)/
+	cp -r img dist/package/$(PLUGIN_ID)/
+	cp dist/module.js dist/package/$(PLUGIN_ID)/module.js
+	cp dist/$(EXEC)-linux dist/package/$(PLUGIN_ID)/$(EXEC)
+	chmod +x dist/package/$(PLUGIN_ID)/$(EXEC)
+	cd dist/package && zip -r ../$(PLUGIN_ID)-$(VERSION).zip $(PLUGIN_ID)/
+	@echo "==> dist/$(PLUGIN_ID)-$(VERSION).zip 就绪"
 
 clean:
 	rm -rf dist
 
-.PHONY: build-backend build-frontend dist clean
+.PHONY: build-backend build-frontend package clean
