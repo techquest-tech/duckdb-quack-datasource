@@ -30,7 +30,7 @@ cmd/            Go backend entry (datasource.Manage)
 pkg/            datasource.go (QueryData / CheckHealth / connection mgmt)
                 sqlcheck.go (read-only whitelist) · convert.go (DuckDB → DataFrame)
 src/            Frontend (ConfigEditor / QueryEditor), bundled with esbuild
-plugin.json     Plugin metadata (id=esquel-duckdb-datasource, backend)
+plugin.json     Plugin metadata (id=panarm-duckdb-datasource, backend)
 img/logo.svg
 ```
 
@@ -42,7 +42,7 @@ make build-backend                  # backend → dist/gpx_duckdb_quack-{linux,d
 ```
 
 For a distributable plugin package, assemble a folder named after the plugin id
-(`esquel-duckdb-datasource/`) containing `plugin.json`, `module.js` at the root,
+(`panarm-duckdb-datasource/`) containing `plugin.json`, `module.js` at the root,
 `gpx_duckdb_quack` (linux amd64), `img/`, `LICENSE`, `README.md`.
 
 ## Install into Grafana
@@ -55,7 +55,7 @@ Grafana releases). Sign it via the
 then install from the catalog:
 
 ```bash
-grafana cli plugins install esquel-duckdb-datasource
+grafana cli plugins install panarm-duckdb-datasource
 ```
 
 ## Configure the datasource

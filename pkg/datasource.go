@@ -18,7 +18,7 @@ import (
 )
 
 // PluginID 插件唯一标识（也用于 grafana.ini allow_loading_unsigned_plugins）。
-const PluginID = "esquel-duckdb-datasource"
+const PluginID = "panarm-duckdb-datasource"
 
 // Settings 是插件配置（数据源配置页填写）。
 // endpoint/token 存 secureJsonData；tablePrefix/queryTimeoutMS 存 jsonData。

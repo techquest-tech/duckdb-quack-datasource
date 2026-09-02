@@ -35,7 +35,7 @@ jobs:
       - name: Assemble plugin package
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
-          PKG=esquel-duckdb-datasource
+          PKG=panarm-duckdb-datasource
           mkdir -p /tmp/rel/$PKG
           cp plugin.json LICENSE README.md /tmp/rel/$PKG/
           cp -r img /tmp/rel/$PKG/
@@ -56,6 +56,6 @@ jobs:
 
             ### Install
             ```bash
-            grafana cli plugins install esquel-duckdb-datasource
+            grafana cli plugins install panarm-duckdb-datasource
             ```
             (requires the plugin to be signed; see grafana.com plugin signing service)

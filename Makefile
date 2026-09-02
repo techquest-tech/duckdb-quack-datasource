@@ -1,4 +1,4 @@
-PLUGIN_ID ?= esquel-duckdb-datasource
+PLUGIN_ID ?= panarm-duckdb-datasource
 EXEC ?= gpx_duckdb_quack
 VERSION ?= 0.1.0
 

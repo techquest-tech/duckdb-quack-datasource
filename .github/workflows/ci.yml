@@ -59,15 +59,15 @@ jobs:
 
       - name: Assemble plugin package
         run: |
-          mkdir -p /tmp/pkg/esquel-duckdb-datasource
-          cp plugin.json LICENSE README.md /tmp/pkg/esquel-duckdb-datasource/
-          cp -r img /tmp/pkg/esquel-duckdb-datasource/
-          cp dist/module.js /tmp/pkg/esquel-duckdb-datasource/module.js
-          cp /tmp/gpx_duckdb_quack /tmp/pkg/esquel-duckdb-datasource/gpx_duckdb_quack
-          chmod +x /tmp/pkg/esquel-duckdb-datasource/gpx_duckdb_quack
+          mkdir -p /tmp/pkg/panarm-duckdb-datasource
+          cp plugin.json LICENSE README.md /tmp/pkg/panarm-duckdb-datasource/
+          cp -r img /tmp/pkg/panarm-duckdb-datasource/
+          cp dist/module.js /tmp/pkg/panarm-duckdb-datasource/module.js
+          cp /tmp/gpx_duckdb_quack /tmp/pkg/panarm-duckdb-datasource/gpx_duckdb_quack
+          chmod +x /tmp/pkg/panarm-duckdb-datasource/gpx_duckdb_quack
 
       - name: Run grafana plugin-validator
         # 官方校验：结构/plugin.json/LICENSE/README 等（未签名 warning 属预期，不阻塞）
         run: |
-          cd /tmp/pkg && zip -r /tmp/plugin.zip esquel-duckdb-datasource/
+          cd /tmp/pkg && zip -r /tmp/plugin.zip panarm-duckdb-datasource/
           npx --yes @grafana/plugin-validator /tmp/plugin.zip || true
